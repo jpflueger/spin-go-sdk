@@ -19,13 +19,19 @@ EXAMPLES_DIR = examples
 .PHONY: build-examples
 build-examples: 
 	@echo "ran build-examples task"
+	cd examples/wasi-cli && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wasi-cli/wit -wit-world wasi:cli/command -x -work -o main.wasm main.go
+	cd examples/spin-http && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wit -wit-world fermyon:spin/http-trigger -x -work -o main.wasm main.go
+	cd examples/wasi-http && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wasi-http/wit -wit-world wasi:http/proxy -x -work -o main.wasm main.go
 
 .PHONY: generate
 generate: wit-bindgen-go
 	@echo "generating http-trigger world"
-	$(WIT_BINDGEN_GO) generate -w fermyon:spin/http-trigger@2.0.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
-	$(WIT_BINDGEN_GO) generate -w wasi:http/proxy@0.2.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-http/wit
-	$(WIT_BINDGEN_GO) generate -w wasi:cli/command@0.2.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-cli/wit
+	rm -rf ./generated
+	mkdir ./generated
+	$(WIT_BINDGEN_GO) generate -w fermyon:spin/http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
+	$(WIT_BINDGEN_GO) generate -w wasi:http/proxy -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-http/wit
+	$(WIT_BINDGEN_GO) generate -w wasi:cli/command -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-cli/wit
+
 # ----------------------------------------------------------------------
 # Cleanup
 # ----------------------------------------------------------------------
