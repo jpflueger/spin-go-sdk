@@ -1,3 +1,9 @@
 [submodule "wasm-tools-go"]
 	path = wasm-tools-go
 	url = git@github.com:ydnar/wasm-tools-go.git
+[submodule "wasi-http"]
+	path = wasi-http
+	url = https://github.com/WebAssembly/wasi-http
+[submodule "wasi-cli"]
+	path = wasi-cli
+	url = https://github.com/WebAssembly/wasi-cli

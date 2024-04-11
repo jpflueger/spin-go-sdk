@@ -23,8 +23,9 @@ build-examples:
 .PHONY: generate
 generate: wit-bindgen-go
 	@echo "generating http-trigger world"
-	$(WIT_BINDGEN_GO) generate -w http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
-
+	$(WIT_BINDGEN_GO) generate -w fermyon:spin/http-trigger@2.0.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
+	$(WIT_BINDGEN_GO) generate -w wasi:http/proxy@0.2.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-http/wit
+	$(WIT_BINDGEN_GO) generate -w wasi:cli/command@0.2.0 -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-cli/wit
 # ----------------------------------------------------------------------
 # Cleanup
 # ----------------------------------------------------------------------
