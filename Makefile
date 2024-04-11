@@ -23,7 +23,7 @@ build-examples:
 .PHONY: generate
 generate: wit-bindgen-go
 	@echo "generating http-trigger world"
-	wit-bindgen-go generate -w http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
+	$(WIT_BINDGEN_GO) generate -w http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
 
 # ----------------------------------------------------------------------
 # Cleanup
@@ -44,6 +44,7 @@ LOCALBIN ?= $(shell pwd)/bin
 $(LOCALBIN):
 	mkdir -p $(LOCALBIN)
 
+WIT_BINDGEN_GO ?= $(LOCALBIN)/wit-bindgen-go
 .PHONY: wit-bindgen-go
 wit-bindgen-go: $(WIT_BINDGEN_GO)
 $(WIT_BINDGEN_GO): $(LOCALBIN)
