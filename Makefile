@@ -28,9 +28,9 @@ generate: wit-bindgen-go
 	@echo "generating http-trigger world"
 	rm -rf ./generated
 	mkdir ./generated
-	$(WIT_BINDGEN_GO) generate -w fermyon:spin/http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
-	$(WIT_BINDGEN_GO) generate -w wasi:http/proxy -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-http/wit
-	$(WIT_BINDGEN_GO) generate -w wasi:cli/command -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-cli/wit
+	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
+	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-http/wit
+	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wasi-cli/wit
 
 # ----------------------------------------------------------------------
 # Cleanup
