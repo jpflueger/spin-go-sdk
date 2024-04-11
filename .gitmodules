@@ -1,0 +1,3 @@
+[submodule "wasm-tools-go"]
+	path = wasm-tools-go
+	url = git@github.com:ydnar/wasm-tools-go.git
