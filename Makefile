@@ -23,7 +23,7 @@ build-examples:
 .PHONY: generate
 generate: wit-bindgen-go
 	@echo "generating http-trigger world"
-	wit-bindgen-go generate -w http-trigger -p github.com/fermyon/spin-go-sdk/internal -o ./internal --exports ./wit
+	wit-bindgen-go generate -w http-trigger -p github.com/fermyon/spin-go-sdk/generated -o ./generated --exports ./wit
 
 # ----------------------------------------------------------------------
 # Cleanup
