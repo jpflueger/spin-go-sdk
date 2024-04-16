@@ -1,14 +1,20 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
 
-	wasihttp "github.com/fermyon/spin-go-sdk/generated/wasi/http/v0.2.0/types"
+	spinHttp "github.com/fermyon/spin-go-sdk/pkg/http"
 )
 
-//export wasi:http/incoming-handler@0.2.0#handle
-func handle(_ wasihttp.IncomingRequest, _ wasihttp.ResponseOutparam) {
-	fmt.Println("Something happened!")
+func init() {
+	spinHttp.Handle(func(w http.ResponseWriter, r *http.Request) {
+		if _, err := w.Write([]byte("Hello, world")); err != nil {
+			panic(err.Error())
+		}
+
+		w.Header().Add("Content-Type", "text/plain")
+		w.WriteHeader(200)
+	})
 }
 
 func main() {}

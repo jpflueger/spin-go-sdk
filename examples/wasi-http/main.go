@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/fermyon/spin-go-sdk/generated/wasi/http/types"
+	spinHttp "github.com/fermyon/spin-go-sdk/pkg/http"
 )
 
-//export wasi:http/incoming-handler#handle
-func handle(_ types.IncomingRequest, _ types.ResponseOutparam) {
-	fmt.Println("Hello, world!")
+func init() {
+	spinHttp.Handle(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Hello, world")
+	})
 }
 
-func main() {
-}
+func main() {}

@@ -16,16 +16,27 @@ test-integration:
 # ----------------------------------------------------------------------
 EXAMPLES_DIR = examples
 
-.PHONY: build-examples
-build-examples: 
-	@echo "ran build-examples task"
+.PHONY: build-example-spin-http
+build-example-spin-http:
+	cd examples/spin-http && spin build
+
+.PHONY: build-example-wasi-cli
+build-example-wasi-cli:
 	cd examples/wasi-cli && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wasi-cli/wit -wit-world wasi:cli/command -x -work -o main.wasm main.go
-	cd examples/spin-http && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wit -wit-world fermyon:spin/http-trigger -x -work -o main.wasm main.go
+
+.PHONY: build-example-wasi-http
+build-example-wasi-http:
 	cd examples/wasi-http && tinygo build -target=wasip2 -gc=leaking -no-debug -wit-package ../../wasi-http/wit -wit-world wasi:http/proxy -x -work -o main.wasm main.go
+
+.PHONY: build-examples
+build-examples: build-example-spin-http
 
 .PHONY: generate
 generate: wit-bindgen-go
-	@echo "generating http-trigger world"
+	@echo "removing generated code in internal/fermyon"
+	rm -rf internal/fermyon
+	@echo "removing generated code in internal/fermyon"
+	rm -rf internal/wasi
 	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/internal -o ./internal --exports ./wit
 	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/internal -o ./internal --exports ./wasi-http/wit
 	$(WIT_BINDGEN_GO) generate -p github.com/fermyon/spin-go-sdk/internal -o ./internal --exports ./wasi-cli/wit
