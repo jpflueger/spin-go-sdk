@@ -2,3 +2,4 @@
 main.wasm
 */sdk-version-go.c
 bin/
+debug/
