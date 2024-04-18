@@ -1,27 +1,29 @@
-package http
+package types
 
 import (
 	"fmt"
 	"net/http"
 	"strings"
 
-	wasi "github.com/fermyon/spin-go-sdk/internal/wasi/http/types"
+	"github.com/fermyon/spin-go-sdk/internal/wasi/http/types"
 	"github.com/ydnar/wasm-tools-go/cm"
 )
 
+type ResponseOutparam = types.ResponseOutparam
+
 type responseOutparamWriter struct {
 	// wasi response outparam is set at the end of http_trigger_handle
-	outparam wasi.ResponseOutparam
+	outparam ResponseOutparam
 	// wasi response
-	response wasi.OutgoingResponse
+	response types.OutgoingResponse
 	// wasi http headers
-	wasiHeaders wasi.Headers
+	wasiHeaders types.Headers
 	// go httpHeaders are reconciled on call to WriteHeader, Flush or at the end of http_trigger_handle
 	httpHeaders http.Header
 	// wasi response body is set on first write because it can only be called once
-	body *wasi.OutgoingBody
+	body *types.OutgoingBody
 	// wasi response stream is set on first write because it can only be called once
-	stream *wasi.OutputStream
+	stream *types.OutputStream
 }
 
 func (row responseOutparamWriter) Header() http.Header {
@@ -62,7 +64,7 @@ func (row responseOutparamWriter) Write(buf []byte) (int, error) {
 }
 
 func (row responseOutparamWriter) WriteHeader(statusCode int) {
-	row.response.SetStatusCode(wasi.StatusCode(statusCode))
+	row.response.SetStatusCode(types.StatusCode(statusCode))
 	if err := row.reconcileHeaders(); err != nil {
 		panic(err.Error())
 	}
@@ -72,18 +74,18 @@ func (row responseOutparamWriter) WriteHeader(statusCode int) {
 func (row responseOutparamWriter) reconcileHeaders() error {
 	for key, vals := range row.httpHeaders {
 		// convert each value distincly
-		fieldVals := make([]wasi.FieldValue, 0, len(vals))
+		fieldVals := make([]types.FieldValue, 0, len(vals))
 		for i, val := range vals {
-			fieldVals[i] = wasi.FieldValue(cm.ToList([]uint8(val)))
+			fieldVals[i] = types.FieldValue(cm.ToList([]uint8(val)))
 		}
 
-		if result := row.wasiHeaders.Set(wasi.FieldKey(key), cm.ToList(fieldVals)); result.IsErr() {
+		if result := row.wasiHeaders.Set(types.FieldKey(key), cm.ToList(fieldVals)); result.IsErr() {
 			switch *result.Err() {
-			case wasi.HeaderErrorInvalidSyntax:
+			case types.HeaderErrorInvalidSyntax:
 				return fmt.Errorf("failed to set header %s to [%s]: invalid syntax", key, strings.Join(vals, ","))
-			case wasi.HeaderErrorForbidden:
+			case types.HeaderErrorForbidden:
 				return fmt.Errorf("failed to set forbidden header key %s", key)
-			case wasi.HeaderErrorImmutable:
+			case types.HeaderErrorImmutable:
 				return fmt.Errorf("failed to set header on immutable header fields")
 			}
 		}
@@ -95,12 +97,12 @@ func (row responseOutparamWriter) reconcileHeaders() error {
 }
 
 // convert the ResponseOutparam to http.ResponseWriter
-func NewHttpResponseWriter(out wasi.ResponseOutparam) http.ResponseWriter {
+func NewHttpResponseWriter(out types.ResponseOutparam) http.ResponseWriter {
 	// need to keep the headers because this is mutable
-	headers := wasi.NewFields()
+	headers := types.NewFields()
 	return responseOutparamWriter{
 		outparam:    out,
-		response:    wasi.NewOutgoingResponse(headers),
+		response:    types.NewOutgoingResponse(headers),
 		wasiHeaders: headers,
 		httpHeaders: http.Header{},
 	}

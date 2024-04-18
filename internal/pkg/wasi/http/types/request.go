@@ -1,16 +1,18 @@
-package http
+package types
 
 import (
 	"fmt"
 	"io"
 	"net/http"
 
-	streams "github.com/fermyon/spin-go-sdk/internal/pkg/wasi/io/streams"
-	wasi "github.com/fermyon/spin-go-sdk/internal/wasi/http/types"
+	"github.com/fermyon/spin-go-sdk/internal/pkg/wasi/io/streams"
+	"github.com/fermyon/spin-go-sdk/internal/wasi/http/types"
 )
 
+type IncomingRequest = types.IncomingRequest
+
 // convert the IncomingRequest to http.Request
-func NewHttpRequest(ir wasi.IncomingRequest) (req *http.Request, err error) {
+func NewHttpRequest(ir IncomingRequest) (req *http.Request, err error) {
 	// convert the http method to string
 	method, err := methodToString(ir.Method())
 	if err != nil {
