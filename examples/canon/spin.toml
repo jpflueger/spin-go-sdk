@@ -1,0 +1,18 @@
+spin_manifest_version = 2
+
+[application]
+name = "canon"
+version = "0.1.0"
+authors = ["Justin Pflueger <justin.pflueger@fermyon.com>"]
+description = ""
+
+[[trigger.http]]
+route = "/..."
+component = "canon"
+
+[component.canon]
+source = "target/wasm32-wasi/release/canon.wasm"
+allowed_outbound_hosts = []
+[component.canon.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
