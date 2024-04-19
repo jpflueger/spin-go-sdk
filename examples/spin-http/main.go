@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	spinHttp "github.com/fermyon/spin-go-sdk/pkg/http"
+	spinHttp "github.com/fermyon/spin-go-sdk/pkg/http-trigger/v2.0.0-rc-2023-10-18/incoming-handler"
 )
 
 func init() {
